@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Who’s Talking? Multiple Speakers in Poetry</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap">
+<style>
+:root{--b1:#dff6ff;--b2:#ffe3f1;--card:#fff;--ink:#241a3a;--mut:#6b6385;--hl:#fff1a8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--b1:#0f2a55;--b2:#2a1450;--card:#231a40;--ink:#f4efff;--mut:#b8afd6;--hl:#5d4d10}}
+:root[data-theme="dark"]{--b1:#0f2a55;--b2:#2a1450;--card:#231a40;--ink:#f4efff;--mut:#b8afd6;--hl:#5d4d10}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}
+body{font-family:'Baloo 2',system-ui,'Segoe UI',sans-serif;color:var(--ink);background:linear-gradient(135deg,var(--b1),var(--b2)) fixed;padding:12px}
+#w{max-width:860px;margin:0 auto}
+.hd{display:flex;gap:10px;justify-content:space-between;align-items:center;background:var(--card);border-radius:999px;padding:8px 18px;box-shadow:0 4px 14px #0002;font-weight:700;font-size:clamp(14px,3.4vw,20px)}
+h1{font-size:clamp(28px,7vw,52px);margin:.4em 0 0;text-align:center;background:linear-gradient(90deg,#3b8cff,#9b5de5,#ff5f9e,#ffb037);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+h2{font-size:clamp(19px,4.4vw,30px);margin:.2em 0}
+p{font-size:clamp(16px,3.2vw,22px);line-height:1.4;margin:.4em 0}.sub{text-align:center;color:var(--mut)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:14px}
+.wc{border:0;border-radius:20px;padding:16px 10px;color:#fff;background:linear-gradient(135deg,var(--a),var(--b));display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;font-family:inherit;font-size:clamp(16px,3.4vw,20px);box-shadow:0 6px 0 #0003;transition:transform .15s}
+.wc:hover:not(:disabled){transform:translateY(-4px) rotate(-1deg)}.wc:disabled{filter:grayscale(.8);opacity:.6;cursor:default}
+.wc .em{font-size:44px}.boss{--a:#ff3d3d;--b:#7a1fa2;grid-column:1/-1}
+.card{background:var(--card);border-radius:22px;padding:18px 20px;margin-top:14px;box-shadow:0 6px 18px #0002;border-top:8px solid var(--a,#9b5de5)}
+.big{font-size:60px;text-align:center}.std{display:inline-block;background:#2f80ed;color:#fff;border-radius:999px;padding:2px 12px;font-size:14px}
+.ex,.pm{border-radius:12px;padding:10px 14px;font-size:clamp(16px,3.4vw,22px);margin:8px 0;line-height:1.6}
+.ex{border:3px dashed var(--mut)}.pm{background:var(--hl)}
+.va{color:#3b8cff;font-weight:800}.vb{color:#ff5f9e;font-weight:800}
+mark{background:#ffb037;color:#241a3a;border-radius:6px;padding:0 4px}
+.go,.back{font-family:inherit;font-weight:700;font-size:clamp(16px,3.4vw,20px);border:0;border-radius:999px;padding:10px 22px;cursor:pointer;margin:8px 6px 0 0}
+.go{background:linear-gradient(90deg,#3b8cff,#9b5de5);color:#fff;box-shadow:0 4px 0 #0003}.back{background:var(--mut);color:#fff}
+.op{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 16px;border:0;border-radius:14px;color:#fff;font-family:inherit;font-weight:700;font-size:clamp(15px,3.2vw,20px);cursor:pointer;box-shadow:0 4px 0 #0003}
+.op:nth-of-type(4n+1){background:#e0475b}.op:nth-of-type(4n+2){background:#2f80ed}.op:nth-of-type(4n+3){background:#1e9e6a}.op:nth-of-type(4n+4){background:#8e4fd0}
+.op.bad{animation:sh .35s;opacity:.35}.op.right{outline:4px solid #ffd23f;transform:scale(1.02)}.op:disabled{cursor:default}
+@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.fbk{border-radius:12px;padding:8px 12px;margin-top:8px;font-size:clamp(15px,3vw,20px)}.g{background:#12a05c33}.r{background:#e0475b33}
+.bar{height:12px;border-radius:9px;background:#0002;overflow:hidden;margin-top:14px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#3b8cff,#ff5f9e);transition:width .4s}
+textarea{width:100%;border-radius:12px;border:3px solid var(--mut);padding:10px;font:inherit;font-size:clamp(15px,3vw,20px);background:var(--card);color:var(--ink)}
+.cf{position:fixed;top:-30px;font-size:26px;animation:fall 2.2s linear forwards;pointer-events:none;z-index:9}@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+</style></head><body><div id="w"><div id="hd" class="hd"></div><div id="pg"></div></div>
+<script>
+const $=id=>document.getElementById(id),words=t=>t.trim().split(/\s+/).filter(Boolean);
+const lines=t=>t.split('\n').map(x=>x.trim()).filter(Boolean),lab=t=>new Set(lines(t).map(l=>(l.match(/^([^:]{1,20}):/)||[])[1]).filter(Boolean).map(s=>s.toLowerCase()));
+const PW='Time to wake up, sleepyhead!<br>Five more minutes, please.<br>The pancakes are getting cold.<br>Pancakes? I’m up!';
+const PS='Snow! No school! Let’s go sledding all day.<br>&emsp;&emsp;Snow means shoveling the driveway before work.<br>The hill is calling our names!<br>&emsp;&emsp;And the ice is calling my back.';
+const PF='My stomach is doing flips.<br>&emsp;&emsp;New school, new friends, new everything!<br>What if nobody sits with me?<br>&emsp;&emsp;What if everybody wants to?';
+const PB='I’m scared.<br>&emsp;&emsp;I’m thrilled.<br>&emsp;&emsp;&emsp;&emsp;<i>We walk in anyway.</i>';
+const W=[
+{n:'Spot the Speaker',e:'🎤',c:['#3b8cff','#2fd0c4'],s:'ELA.6.R.1.3 • Poetic Elements',d:'A poem can have <b>more than one speaker</b> (a voice that talks). Poets show who is talking with <b>name labels, quotation marks, indents, or italics</b>.',x:'<span class="va">MAYA:</span> The bus is late again!<br><span class="vb">JAYDEN:</span> Maybe it’s stuck in traffic.',k:'Clues: labels, “quotes,” indents, italics',
+ q:[['How does the poet show who is speaking?',['Name labels before each line','Italics','Quotation marks'],0,'MAYA: and JAYDEN: tell us who says each line.','MAYA: The bus is late again!<br>JAYDEN: Maybe it’s stuck in traffic.<br>MAYA: I’m going to miss the bell.<br>JAYDEN: Relax, we have ten minutes.'],
+ ['How many speakers are in this poem?',['1','2','3'],1,'Dad and the narrator (“I”) are the two voices.','“Where’s my other shoe?” Dad asked.<br>“Under the couch,” I said.<br>“Why is it always under the couch?”<br>“Because it likes it there!”'],
+ ['Who says “Under the couch”?',['Dad','The narrator (“I”)','The shoe'],1,'“I said” tells us the narrator speaks this line.','“Where’s my other shoe?” Dad asked.<br>“Under the couch,” I said.'],
+ ['Why might the poet indent the second line?',['To make the poem longer','To show a new speaker is talking','To start a new stanza'],1,'Indenting is a signal that the voice changed.','I can’t wait for summer!<br>&emsp;&emsp;Summer means sunburns and bugs.']],
+ p:'Write 2 lines of a poem with two speakers. Start each line with a name and a colon, like <b>Ana:</b> and <b>Ben:</b>.',a:'Ana: I can’t find my pencil!<br>Ben: It’s behind your ear.',h:'Hint: write 2 lines, each starting with a different name and a colon.',v:t=>lines(t).length>=2&&lab(t).size>=2},
+{n:'Voice Detective',e:'🕵️',c:['#7b2ff7','#f107a3'],s:'ELA.6.R.1.3 • Poetic Elements',d:'Even without labels, you can tell voices apart. Ask: <b>Who would say this? What does this voice want or feel?</b>',x:'<span class="va">Parent:</span> Time to wake up!<br><span class="vb">Child:</span> Five more minutes, please.',k:'Clue: each voice has a different goal',
+ q:[['Who says “Time to wake up, sleepyhead!”?',['The child','The parent','The pancakes'],1,'Someone giving a wake-up call is the parent.',PW],
+ ['Who says “Five more minutes, please”?',['The sleepy child','The parent','The narrator'],0,'Someone asking for more sleep is the child.',PW],
+ ['Who says “The pancakes are getting cold”?',['The child','Neither','The parent'],2,'The parent is trying to get the child out of bed.',PW],
+ ['How can you tell line 2 is a different voice than line 1?',['The topic is pancakes','The goal changes: one wants up, one wants more sleep','The line is longer'],1,'Different wants and attitudes signal a new speaker.',PW]],
+ p:'Write 4 lines of a conversation between a coach and a player. Put each line on its own row and start with a label.',a:'Coach: Run faster!<br>Player: My legs are tired.<br>Coach: Tired means stronger.<br>Player: Then I’m super strong!',h:'Hint: write 4 lines, each starting with a label (like Coach: or Player:).',v:t=>lines(t).length>=4&&lab(t).size>=2},
+{n:'Two Perspectives',e:'⚖️',c:['#ff5f9e','#ff9a3d'],s:'ELA.6.R.1.3 • Point of View',d:'Two speakers can show two <b>perspectives</b> (points of view) on the <b>same event</b>.',x:'<span class="va">Kid:</span> Snow! No school!<br><span class="vb">Dad:</span> Snow means shoveling.',k:'Clue: same event, different feelings',
+ q:[['What does the first speaker think about the snow?',['It means extra work','It means fun and no school','It is scary'],1,'The first voice is excited about sledding.',PS],
+ ['What does the second speaker think about the snow?',['It means extra work','It is exciting','It is boring'],0,'Shoveling and a sore back show his view.',PS],
+ ['Why does the poet use both voices?',['To show the same event can look different to different people','To list weather facts','To make the poem rhyme'],0,'Two voices show two perspectives on the same snow day.',PS],
+ ['Which phrase shows the second speaker’s perspective?',['“Let’s go sledding”','“No school”','“shoveling the driveway before work”'],2,'Shoveling before work is a parent’s worry.',PS]],
+ p:'Write 2 lines about a rainy day: one speaker LOVES it, one HATES it. Each on its own row.',a:'Rain! Puddles to jump in!<br>Rain means soggy socks and a cold.',h:'Hint: write 2 lines (each at least 3 words), one for each speaker.',v:t=>lines(t).length>=2&&lines(t).every(l=>words(l).length>=3)},
+{n:'Tone Zone',e:'🎭',c:['#12a05c','#2fd0c4'],s:'ELA.6.R.1.3 • Tone & Word Choice',d:'<b>Tone</b> is a speaker’s attitude. <b>Word choice</b> and figurative language show it.',x:'<span class="va">Voice 1:</span> My stomach is doing <mark>flips</mark>.<br><span class="vb">Voice 2:</span> New school, new friends, <mark>new everything!</mark>',k:'Clue: what feeling do the words show?',
+ q:[['What is the tone of the first voice?',['Nervous and worried','Angry','Bored'],0,'“Flips” and “what if nobody sits with me” show worry.',PF],
+ ['What is the tone of the second voice?',['Sad','Hopeful and excited','Confused'],1,'“New everything!” shows excitement.',PF],
+ ['“My stomach is doing flips” is figurative language. What does it show?',['The speaker is a gymnast','The speaker feels very nervous','The speaker is hungry'],1,'It uses a flipping feeling to show nerves.',PF],
+ ['How do the last two lines work together?',['The second voice answers the worry with a positive idea','They repeat each other','They are about different topics'],0,'“What if everybody wants to?” flips the worry upside down.',PF]],
+ p:'Write two lines about a big game: one NERVOUS voice and one EXCITED voice.',a:'My hands won’t stop shaking!<br>I’ve been waiting for this all season!',h:'Hint: write 2 lines (each at least 3 words) with different feelings.',v:t=>lines(t).length>=2&&lines(t).every(l=>words(l).length>=3)},
+{n:'Why Two Voices?',e:'💡',c:['#ff3d3d','#ffb037'],s:'ELA.6.R.1.2 • Theme / Meaning',d:'Poets use several voices to build <b>meaning</b>. When voices <b>join together</b>, the poem’s theme shines through.',x:'<span class="va">Voice 1:</span> I’m scared.<br><span class="vb">Voice 2:</span> I’m thrilled.<br><b>Both:</b> We walk in anyway.',k:'Clue: ask “What does the poem say when the voices combine?”',
+ q:[['Why does the poet have the last line shared by both voices?',['To show both feelings exist together','To fill space','To change the topic'],0,'The shared line merges the two feelings into one idea.',PB],
+ ['What is the best central idea of this poem?',['Feeling scared and excited can happen at the same time','School is boring','Nobody should be scared'],0,'The two voices show mixed feelings.',PB],
+ ['What does the back-and-forth structure create?',['A conversation between two feelings','A list of facts','A rhyme scheme'],0,'Alternating voices makes the feelings feel like a conversation.',PB],
+ ['When would a poet most likely use two speakers?',['To list facts about a state','To show two different points of view','To count syllables'],1,'Two speakers help show different viewpoints.']],
+ p:'Write a line that BOTH voices say together to end a poem. Start it with <b>Both:</b>',a:'Both: We’ll figure it out together.',h:'Hint: start with “Both:” and write at least 5 words total.',v:t=>/^\s*both\s*:/i.test(t.trim())&&words(t).length>=5},
+{n:'Write It!',e:'✍️',c:['#8e4fd0','#3b8cff'],s:'ELA.6.W.1.4 • Creating Poetry',d:'To write a two-voice poem: give each voice a <b>different feeling</b>, <b>label or indent</b> the voices, and end by <b>bringing them together</b>.',x:'<span class="va">Voice 1:</span> Rain! Puddles to jump in!<br><span class="vb">Voice 2:</span> Rain means soggy socks.<br><b>Both:</b> We splash home together.',k:'Clue: different voices + a shared ending',
+ q:[['Which is the clearest way to show two speakers?',['Mix both voices in one line with no marks','Use labels or indent one voice','Use the same words for each voice'],1,'Labels and indents tell readers who speaks.'],
+ ['Which pair shows two different perspectives on rain?',['“It is raining.” / “Yes, it is raining.”','“Rain! Puddles to jump in!” / “Rain means soggy socks and a cold.”','“Rain falls.” / “Rain falls.”'],1,'Only this pair shows different feelings.'],
+ ['A shared final line should…',['Repeat the first line','Bring the two voices together in one idea','Start a new topic'],1,'A shared ending shows what the voices have in common.'],
+ ['Each voice in a two-voice poem should have…',['The exact same feelings','No words','A different feeling or point of view'],2,'Different viewpoints make the poem interesting.']],
+ p:'Capstone! Write a 6-line two-voice poem. Label <b>Voice 1:</b> and <b>Voice 2:</b>, and end with a <b>Both:</b> line.',a:'Voice 1: Monday is a mountain.<br>Voice 2: Monday is a fresh start.<br>Voice 1: I’m tired already.<br>Voice 2: I packed extra snacks!<br>Voice 1: Okay, maybe that helps.<br>Both: We climb it together.',h:'Hint: 6 lines. Use Voice 1:, Voice 2:, and finish with Both:',v:t=>lines(t).length>=6&&lab(t).size>=3&&lab(t).has('both')}];
+const T=['1','2','3'],B=[['How many speakers are in this poem?',T,1,'Mom and the narrator are the two voices.','“Did you finish the project?” Mom asked.<br>“Almost,” I mumbled.<br>“Almost isn’t done.”'],
+['Who says “Almost isn’t done”?',['The narrator','Mom','Nobody'],1,'It responds to “Almost,” so it is Mom.','“Did you finish the project?” Mom asked.<br>“Almost,” I mumbled.<br>“Almost isn’t done.”'],
+['What is the lifeguard’s tone?',['Urgent and serious','Silly','Bored'],0,'Shouting for everyone to get out shows urgency.','LIFEGUARD: Everyone out of the water!<br>SWIMMER: But I’m having fun!'],
+['One voice says “The city is exciting.” The other says “The city is overwhelming.” What is the poet showing?',['Two perspectives on the same place','A list of facts','A rhyme scheme'],0,'The same city looks different to each voice.'],
+['A poem alternates plain text and italics. What are the italics most likely doing?',['Showing a second speaker','Making the poem rhyme','Showing the title'],0,'Typography can signal a change of voice.'],
+['Both voices end by saying “We belong here.” What does this suggest?',['The voices disagree','The two perspectives find common ground','The poem is about a store'],1,'A shared line unites the viewpoints.']];
+let xp=0,streak=0,stars=[],Q,qi,ok,cur;
+const ranks=['Rookie Reader','Voice Spotter','Speaker Sleuth','Perspective Pro','Legend 🏆'];
+function upd(){const k=[0,120,300,500,700].filter(t=>xp>=t).length-1;$('hd').innerHTML=`<span>${ranks[k]}</span><span>⭐ ${xp} XP</span><span>🔥 ${streak}</span>`}
+function put(h){$('pg').innerHTML=h;upd();scrollTo(0,0)}
+function boom(){const e=['🎉','⭐','✨','🎈','💥'];for(let k=0;k<22;k++){const s=document.createElement('span');s.className='cf';s.textContent=e[k%5];s.style.left=Math.random()*100+'vw';s.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(s);setTimeout(()=>s.remove(),2800)}}
+function map(){const dn=stars.slice(0,6).filter(Boolean).length;
+ put(`<h1>🗣️ Who’s Talking?</h1><p class="sub">Multiple Speakers in Poetry Quest • Florida B.E.S.T. ELA<br>Beat each world to unlock the next!</p><div class="grid">`+W.map((w,i)=>{const lk=i>0&&!stars[i-1];return `<button class="wc" style="--a:${w.c[0]};--b:${w.c[1]}" ${lk?'disabled':''} onclick="teach(${i})"><span class="em">${lk?'🔒':w.e}</span><b>${w.n}</b><small>${stars[i]?'⭐'.repeat(stars[i]):lk?'Locked':'Play!'}</small></button>`}).join('')+`<button class="wc boss" ${dn<6?'disabled':''} onclick="boss()"><span class="em">${dn<6?'🔒':'👾'}</span><b>BOSS BATTLE: Voices Showdown</b><small>${stars[6]?'⭐'.repeat(stars[6]):dn<6?'Beat all 6 worlds first':'Play!'}</small></button></div>`)}
+function teach(i){const w=W[i];put(`<div class="card" style="--a:${w.c[0]}"><div class="big">${w.e}</div><h2>${w.n}</h2><span class="std">${w.s}</span><p>${w.d}</p><div class="ex">${w.x}</div><p>🔍 ${w.k}</p><button class="go" onclick="quiz(${i})">Start! →</button><button class="back" onclick="map()">← Map</button></div>`)}
+function quiz(i){cur=i;Q=W[i].q;qi=0;ok=0;ask()}
+function boss(){cur=6;Q=B;qi=0;ok=0;ask()}
+function ask(){const q=Q[qi],b=cur==6,last=qi==Q.length-1;let miss=0;
+ put(`<div class="bar"><i style="width:${qi/Q.length*100}%"></i></div><p class="sub">${b?'👾 Boss Battle':W[cur].e+' '+W[cur].n} • Question ${qi+1} of ${Q.length}</p><div class="card" style="--a:${b?'#ff3d3d':W[cur].c[0]}">${q[4]?'<div class="pm">'+q[4]+'</div>':''}<h2>${q[0]}</h2>${q[1].map((o,k)=>`<button class="op" data-k="${k}">${o}</button>`).join('')}<div id="fb"></div></div>`);
+ document.querySelectorAll('.op').forEach(btn=>btn.onclick=()=>{const k=+btn.dataset.k;
+  if(k==q[2]){let pts=3;if(!miss){ok++;pts=10+Math.min(streak,5)*2;streak++}xp+=pts;upd();
+   document.querySelectorAll('.op').forEach(x=>x.disabled=true);btn.classList.add('right');if(!miss&&streak>=3)boom();
+   $('fb').innerHTML=`<div class="fbk g">✅ ${q[3]} <b>+${pts} XP</b></div><button class="go" id="nx">${last?'Continue →':'Next →'}</button>`;
+   $('nx').onclick=()=>{if(!last){qi++;ask()}else fin()}}
+  else{miss++;streak=0;upd();btn.disabled=true;btn.classList.add('bad');$('fb').innerHTML='<div class="fbk r">❌ Not quite! Look at the clues in the poem and try another answer.</div>'}})}
+function fin(){const t=Q.length,s=ok==t?3:ok>=t-2?2:1;stars[cur]=Math.max(stars[cur]||0,s);cur==6?result(true):create()}
+function create(){const w=W[cur];
+ put(`<div class="card" style="--a:${w.c[0]}"><h2>✍️ Your Turn: Create One!</h2><p>${w.p}</p><textarea id="ta" rows="5" placeholder="Type here... (press Enter for a new line)"></textarea><div id="fb"></div><button class="go" id="sub">Submit (+50 XP)</button><button class="back" id="skip">Skip</button></div>`);
+ $('skip').onclick=()=>result();
+ $('sub').onclick=()=>{const t=$('ta').value;
+  if(w.v(t)){xp+=50;upd();boom();$('sub').remove();$('skip').remove();$('fb').innerHTML=`<div class="fbk g">🌟 Awesome! +50 XP<br>Example:<br><i>${w.a}</i></div><button class="go" onclick="result()">Finish World →</button>`}
+  else $('fb').innerHTML=`<div class="fbk r">${w.h}</div>`}}
+function result(bd){boom();const s=stars[cur],all=stars.filter(Boolean).length==7;
+ put(`<div class="card"><div class="big">${bd?'🏆':'🎉'}</div><h2>${bd?'BOSS DEFEATED!':'World Complete!'}</h2><p style="font-size:40px;text-align:center;margin:0">${'⭐'.repeat(s)}</p><p>You have <b>${xp} XP</b>.${all?' You beat the whole game, poet! 🎤':' Next world unlocked!'}</p><button class="go" onclick="map()">Back to Map →</button></div>`)}
+map();
+</script></body></html>
